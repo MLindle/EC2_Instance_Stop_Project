@@ -1,0 +1,65 @@
+name: Upload and deploy PROD
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+
+  upload_to_s3_job:
+    name: Upload lambda code to S3
+    runs-on: ubuntu-latest
+    steps:
+
+      # Configure AWS credentials
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region:             ${{ secrets.AWS_REGION }}
+      
+      # Zip file and upload
+
+      - uses: actions/checkout@v5
+      - name: Package and upload lambda code to S3
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
+          S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+        run: |
+          zip function.zip lambda_function.py
+          aws s3 cp function.zip s3://$S3_BUCKET/$S3_PATH/function.zip
+
+
+  deploy_to_beta_job:
+    name: Deploy lambda to prod environment
+    runs-on: ubuntu-latest
+    needs: upload_to_s3_job
+    steps:
+
+      # Configure AWS credentials
+
+      - name: AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region:             ${{ secrets.AWS_REGION }}
+      
+      # Deploy to prod
+
+      - uses: actions/checkout@v5
+      - name: Deploy lambda to beta environment
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
+          S3_PATH:   ${{ secrets.S3_PATH_PROD }}
+        run: |
+          aws cloudformation deploy \
+            --stack-name ${{ secrets.CF_STACK_NAME_PROD }} \
+            --template-file infrastructure/cloudformation/lambda-ec2-shutdown.yml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameter-overrides \
+              LambdaFunctionName=${{ secrets.LAMBDA_NAME_PROD }} \
+              LambdaCodeBucket=${{ secrets.S3_BUCKET_PROD }} \
+              LambdaCodeKey=${{ secrets.S3_PATH_PROD }}
