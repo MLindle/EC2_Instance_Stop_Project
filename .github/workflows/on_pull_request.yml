@@ -62,4 +62,4 @@ jobs:
             --parameter-overrides \
               LambdaFunctionName=${{ secrets.LAMBDA_NAME_BETA }} \
               LambdaCodeBucket=${{ secrets.S3_BUCKET_BETA }} \
-              LambdaCodeKey=${{ secrets.S3_PATH_BETA }}/function.zip
+              LambdaCodeKey=${{ secrets.S3_PATH_BETA }}function.zip
