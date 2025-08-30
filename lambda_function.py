@@ -20,3 +20,5 @@ for reservation in describe_instances["Reservations"]:
                     print (tag["Value"], "is stopped")
         else:
              print ("Instance state unknown")
+
+# Adding a comment to test PR and merge workflows
