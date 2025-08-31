@@ -99,3 +99,32 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
   
+DynamoDBRole:
+  DynamoDBRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Allow_DynamoDB_Writes
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBWriteToSpecificTable
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:TransactWriteItems
+                  - dynamodb:DescribeTable
+                Resource:
+                  - !GetAtt StoppedInstanceLoggingTable.Arn
+                  - !Sub "${StoppedInstanceLoggingTable.Arn}/index/*"
+  
