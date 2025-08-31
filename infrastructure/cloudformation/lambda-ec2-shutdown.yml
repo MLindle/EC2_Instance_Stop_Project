@@ -15,6 +15,14 @@ Parameters:
     Type: String
     Description: S3 key for the Lambda deployment package (e.g., path/to/lambda.zip)
 
+  CreateDynamo:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "true"
+
+Conditions:
+  CreateDynamoCond: !Equals [!Ref CreateDynamo, "true"]
+
 Resources:
 
   LambdaExecutionRole:
@@ -76,6 +84,7 @@ Resources:
       SourceArn: !GetAtt LambdaScheduleRule.Arn
 
   StoppedInstanceLoggingTable:
+    Condition: CreateDynamoCond
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Stopped_Instance_Logging_Table
