@@ -50,7 +50,7 @@ jobs:
       # Deploy to prod
 
       - uses: actions/checkout@v5
-      - name: Deploy lambda to beta environment
+      - name: Deploy lambda to prod environment
         env:
           S3_BUCKET: ${{ secrets.S3_BUCKET_PROD }}
           S3_PATH:   ${{ secrets.S3_PATH_PROD }}
@@ -64,5 +64,5 @@ jobs:
               LambdaCodeBucket=${{ secrets.S3_BUCKET_PROD }} \
               LambdaCodeKey=${{ secrets.S3_PATH_PROD }}/function.zip \
               CreateDynamo=false \
-              CreateCloudTrailRole=false
+              CreateCloudTrailRole=false \
               ApiStageName=prod

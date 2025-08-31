@@ -152,6 +152,7 @@ Resources:
     Properties:
       ApiId: !Ref HttpApi
       RouteKey: "$default"
+      AuthorizationType: AWS_IAM
       Target: !Sub "integrations/${HttpApiIntegration}"
 
   HttpApiStage:
