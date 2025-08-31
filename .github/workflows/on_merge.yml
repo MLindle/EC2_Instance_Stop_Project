@@ -65,3 +65,4 @@ jobs:
               LambdaCodeKey=${{ secrets.S3_PATH_PROD }}/function.zip \
               CreateDynamo=false \
               CreateCloudTrailRole=false
+              ApiStageName=prod
