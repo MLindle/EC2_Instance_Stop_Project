@@ -152,6 +152,7 @@ Resources:
     Properties:
       ApiId: !Ref HttpApi
       RouteKey: "$default"
+      AuthorizationType: AWS_IAM
       Target: !Sub "integrations/${HttpApiIntegration}"
 
   HttpApiStage:
@@ -167,5 +168,7 @@ Resources:
       FunctionName: !Ref LambdaFunction
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*/*"
+      SourceArn: !Sub "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/$default"
+
+      
     
