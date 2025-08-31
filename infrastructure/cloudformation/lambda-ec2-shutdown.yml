@@ -145,8 +145,7 @@ Resources:
       ApiId: !Ref HttpApi
       IntegrationType: AWS_PROXY
       PayloadFormatVersion: "2.0"
-      IntegrationUri: !Sub >
-        arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+      IntegrationUri: !GetAtt LambdaFunction.Arn
 
   HttpApiDefaultRoute:
     Type: AWS::ApiGatewayV2::Route
