@@ -20,8 +20,14 @@ Parameters:
     AllowedValues: ["true", "false"]
     Default: "true"
 
+  CreateCloudTrailRole:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "true"
+
 Conditions:
   CreateDynamoCond: !Equals [!Ref CreateDynamo, "true"]
+  CreateCloudTrailRoleCond: !Equals [!Ref CreateCloudTrailRole, "true"]
 
 Resources:
 
@@ -127,4 +133,19 @@ Resources:
                 Resource:
                   - !GetAtt StoppedInstanceLoggingTable.Arn
                   - !Sub "${StoppedInstanceLoggingTable.Arn}/index/*"
+
+  LambdaReadCloudTrailRole:
+    Condition:  CreateCloudTrailRoleCond
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Lambda_Read_CloudTrail
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSCloudTrail_ReadOnlyAccess
   
