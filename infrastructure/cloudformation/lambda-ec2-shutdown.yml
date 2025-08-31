@@ -74,3 +74,19 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt LambdaScheduleRule.Arn
+
+  StoppedInstanceLoggingTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Stopped_Instance_Logging_Table
+      AttributeDefinitions:
+        - AttributeName: InstanceId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: InstanceId
+          KeyType: HASH 
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  
