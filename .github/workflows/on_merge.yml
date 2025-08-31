@@ -63,5 +63,5 @@ jobs:
               LambdaFunctionName=${{ secrets.LAMBDA_NAME_PROD }} \
               LambdaCodeBucket=${{ secrets.S3_BUCKET_PROD }} \
               LambdaCodeKey=${{ secrets.S3_PATH_PROD }}/function.zip \
-              CreateDynamo=false
+              CreateDynamo=false \
               CreateCloudTrailRole=false
