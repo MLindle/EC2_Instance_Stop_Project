@@ -99,7 +99,6 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
   
-DynamoDBRole:
   DynamoDBRole:
     Type: AWS::IAM::Role
     Properties:
