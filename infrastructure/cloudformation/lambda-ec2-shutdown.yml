@@ -108,23 +108,23 @@ Resources:
         WriteCapacityUnits: 5
 
   DynamoDBWritePolicy:
-  Condition: CreateDynamoCond
-  Type: AWS::IAM::Policy
-  Properties:
-    PolicyName: DynamoDBWriteToSpecificTable
-    Roles:
-      - !Ref LambdaExecutionRole
-    PolicyDocument:
-      Version: "2012-10-17"
-      Statement:
-        - Effect: Allow
-          Action:
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:BatchWriteItem
-            - dynamodb:TransactWriteItems
-            - dynamodb:DescribeTable
-          Resource:
-            - !GetAtt StoppedInstanceLoggingTable.Arn
-            - !Sub "${StoppedInstanceLoggingTable.Arn}/index/*"
-  
+    Condition: CreateDynamoCond
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DynamoDBWriteToSpecificTable
+      Roles:
+        - !Ref LambdaExecutionRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:TransactWriteItems
+              - dynamodb:DescribeTable
+            Resource:
+              - !GetAtt StoppedInstanceLoggingTable.Arn
+              - !Sub "${StoppedInstanceLoggingTable.Arn}/index/*"
+    
