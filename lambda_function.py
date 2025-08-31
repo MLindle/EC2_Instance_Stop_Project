@@ -8,13 +8,18 @@ def lambda_handler(event, context):
     execution_id = context.aws_request_id
     print(f"Execution ID: {execution_id}")
     process_instances(context, execution_id)
+
+    q = event.get("queryStringParameters") or {}
+    key   = q.get("key")
+    value = q.get("value")
+
     return {
         "statusCode": 200,
-        "body": json.dumps({"execution_id": execution_id})
+        "body": json.dumps({"execution_id": execution_id, "key": key, "value": value})
     }
     
 
-def process_instances(context, execution_id):
+def process_instances(context, execution_id, key, value):
 
     ec2 = boto3.client('ec2')
 
@@ -27,6 +32,8 @@ def process_instances(context, execution_id):
     autoshutdown = False
 
     shutdown_timestamp = ''
+
+    print (key, value)
 
     for reservation in describe_instances["Reservations"]:
         for instance in reservation["Instances"]:
